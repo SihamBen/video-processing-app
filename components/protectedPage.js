@@ -1,37 +1,30 @@
-import {Container,Input,Stack,Button} from '@chakra-ui/react'
+import {Container,Input,Stack,Button, Heading, ListItem,OrderedList,Flex} from '@chakra-ui/react'
 import {useState} from 'react'
 import {useAuth} from '../hooks/index'
+import {login} from '../utils/requests'
 export default function ProtectedPage({children}){
 const [appId,setAppId]=useState('')
 const [appSecret,setAppSecret]=useState('')
 const {token,setToken}=useAuth('')
-let isLoggedIn=token
-async function loginToSymbl(){
-    const res=await fetch('https://api.symbl.ai/oauth2/token:generate',{
-        method:"POST",
-        headers:{
-            'Content-type':"application/json"
-        },
-        mode: "cors",
-        body:JSON.stringify(
-            {
-                type:'application',
-                appId,
-                appSecret
-            }
-        )
-    })
-    const {accessToken}=await res.json()
-
-    setToken(accessToken)
- 
+function loginToSymbl(){    
+const token=login(appId,appSecret)
+setToken(token) 
 }
-
 return(
     <>
-    {!isLoggedIn?
-        (<Container>
-            <Stack spacing={3} marginBottom="1rem">
+    {!token?
+        (<Flex justify="space-between" m='100px'>
+
+      <Container bg="red">
+              <OrderedList>
+                <ListItem>Sign up to Symbl</ListItem>
+                <ListItem>Sign up to Symbl</ListItem>
+                <ListItem>Sign up to Symbl</ListItem>
+                <ListItem>Sign up to Symbl</ListItem>
+              </OrderedList>
+            </Container>
+
+            <Stack spacing={3} marginBottom="1rem" bg="red">
               <Input
                 placeholder="appId"
                 size="md"
@@ -44,9 +37,11 @@ return(
                 value={appSecret}
                 onChange={(e) => setAppSecret(e.target.value)}
               />
+              <Button onClick={() => loginToSymbl()}>Login</Button>
             </Stack>
-            <Button onClick={() => loginToSymbl()}>Login</Button>
-          </Container>):(children)
+            
+            
+          </Flex>):(children)
 
     }
     
