@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const login=async (appId,appSecret)=>{
   const res=await fetch('https://api.symbl.ai/oauth2/token:generate',{
         method:"POST",
@@ -13,21 +15,28 @@ export const login=async (appId,appSecret)=>{
             }
         )
     })
-    const {accessToken}=await res.json()
-    return accessToken
+  return await res.json()
+    
+   
 }
 
 
 
 
 
-export const getTranscripts = (conversationId) => {
-    fetch(`https://api.symbl.ai/v1/conversations/${conversationId}/messages`, {
+export const getTranscripts = (conversationId,token) => {
+  console.log(token)
+  axios({url:`https://api.symbl.ai/v1/conversations/${conversationId}/messages`,
+  headers:{"x-api-key":token,'Content-Type':'application/json'},mode:'no-cors'})
+  .then((result) => {return result.messages})
+
+    /*fetch(`https://api.symbl.ai/v1/conversations/${conversationId}/messages`, {
       method: 'GET',
-      headers: {"x-api-key": token,'Content-Type': 'application/json',},
-      mode:'no-cors'
+      headers: {"x-api-key":token,'Content-Type':'text/plain'},
+      mode:"no-cors"
+      
     })
-      .then((result) => {return result.messages})
+      .then((result) => {return result.messages})*/
   }
 export const getQuestions = (conversationId) => {
     fetch(`https://api.symbl.ai/v1/conversations/${conversationId}/messages`, {

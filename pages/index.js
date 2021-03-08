@@ -36,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     if (status === 'completed') {
-      setMessages(getTranscripts(conversationId))
+      console.log(getTranscripts(conversationId,token))
     }
   }, [status])
 
